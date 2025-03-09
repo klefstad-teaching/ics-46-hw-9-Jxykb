@@ -40,21 +40,17 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
 }
 
 vector<int> extract_shortest_path(const vector<int>& distances, const vector<int>& previous, int destination) {
-    cout << "Is this even running?" << endl;
+    //cout << "Is this even running?" << endl;
     vector<int> shortestPath;
     if (distances[destination] == INF) {
-        cout << "No path to destination: " << destination << endl;
+        //cout << "No path to destination: " << destination << endl;
         return shortestPath;
     }
 
     set<int> visitedNodes;
-    for (int i = destination; i != -1; i = previous[i]) {
-        if (visitedNodes.count(i)) {
-            cout << "Cycle detected in path reconstruction!" << endl;
-            break;
-        }
-        visitedNodes.insert(i);
-        cout << "Adding node to path: " << i << endl;
+    int i = destination;
+    i = previous[i];
+    for (i; i != -1; i = previous[i]) {
         shortestPath.push_back(i);
     }
 
