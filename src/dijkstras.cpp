@@ -6,20 +6,19 @@ using namespace std;
 
 vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous) {
   int numVertices = G.numVertices;
-  vector<int> distances(numVertices, INF);
-  vector<bool> visited(numVertices, false);
+  vector<int> distance(numVertices, INF);
   previous.resize(numVertices, -1);
+  vector<bool> visited(numVertices, false);
 
-  priority_queue<Edge, vector<Edge>, greater<Edge>> minHeap;
-  minHeap.push(Edge(source, 0));
-  distances[source] = 0;
+  priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> prioQueue;
+  distance[source] = 0;
+  prioQueue.push({source, 0});
 
-  while (!minHeap.empty()) {
-    Edge curr = minHeap.top();
-    minHeap.pop();
-    int u = curr.src;
+  while(!prioQueue.empty()) {
+    int u = prioQueue.top().first;
+    prioQueue.pop();
 
-    if (visited[u]) {
+    if (visited[u]){
       continue;
     }
     visited[u] = true;
@@ -27,14 +26,15 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
     for (const Edge& edge : G[u]) {
       int v = edge.dst;
       int weight = edge.weight;
-      if (!visited[v] && distances[u] + weight < distances[v]) {
-        distances[v] = distances[u] + weight;
+
+      if (!visited[v] && distance[u] + weight < distance[v]) {
+        distance[v] = distance[u] + weight;
         previous[v] = u;
-        minHeap.push(Edge(v, distances[v]));
+        prioQueue.push({v, distance[v]});
       }
     }
   }
-  return distances;
+  return distance;
 }
 
 vector<int> extract_shortest_path(const vector<int>& distances, const vector<int>& previous, int destination){
