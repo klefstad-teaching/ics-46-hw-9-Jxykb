@@ -7,15 +7,15 @@ using namespace std;
 vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous) {
   int numVertices = G.numVertices;
   vector<int> distance(numVertices, INF);
-  previous.resize(numVertices, -1);
   vector<bool> visited(numVertices, false);
+  previous.resize(numVertices, -1);
 
   priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> prioQueue;
   distance[source] = 0;
-  prioQueue.push({source, 0});
+  prioQueue.push({0, source});
 
   while(!prioQueue.empty()) {
-    int u = prioQueue.top().first;
+    int u = prioQueue.top().second;
     prioQueue.pop();
 
     if (visited[u]){
@@ -30,7 +30,7 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
       if (!visited[v] && distance[u] + weight < distance[v]) {
         distance[v] = distance[u] + weight;
         previous[v] = u;
-        prioQueue.push({v, distance[v]});
+        prioQueue.push({distance[v], v});
       }
     }
   }
@@ -39,13 +39,14 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
 
 vector<int> extract_shortest_path(const vector<int>& distances, const vector<int>& previous, int destination){
   vector<int> shortestPath;
-  if(distances[destination] == INF){
+  if(previous[destination] == -1){
     return shortestPath;
   }
 
   for(int i = destination; i != -1; i = previous[i]){
     shortestPath.push_back(i);
   }
+
   reverse(shortestPath.begin(), shortestPath.end());
   return shortestPath;
 }
