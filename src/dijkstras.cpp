@@ -49,7 +49,6 @@ vector<int> extract_shortest_path(const vector<int>& distances, const vector<int
 
     set<int> visitedNodes;
     int i = destination;
-    i = previous[i];
     for (i; i != -1; i = previous[i]) {
         shortestPath.push_back(i);
     }
